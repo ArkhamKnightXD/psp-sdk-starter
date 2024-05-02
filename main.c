@@ -13,8 +13,11 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_VFPU | THREAD_ATTR_USER);
 
 char list[0x20000] __attribute__((aligned(64)));
 
-int xPos = 32; // Initial x position of the square
-int yPos = 32; // Initial y position of the square
+int yPos = SCREEN_HEIGHT / 2 - 48;
+int yPos2 = SCREEN_HEIGHT / 2 - 48;
+
+int ballXPos = SCREEN_WIDTH / 2 - 16;
+int ballYPos = SCREEN_HEIGHT / 2 - 16;
 int speed = 5; 
 
 void initGu() {
@@ -95,18 +98,22 @@ int main() {
         if (pad.Buttons & PSP_CTRL_UP && yPos > 0)
             yPos -= speed;
 
-        else if (pad.Buttons & PSP_CTRL_DOWN && yPos < SCREEN_HEIGHT - 32)
+        else if (pad.Buttons & PSP_CTRL_DOWN && yPos < SCREEN_HEIGHT - 48)
             yPos += speed;
 
-        else if (pad.Buttons & PSP_CTRL_LEFT && xPos > 0)
-            xPos -= speed;
+        else if (pad.Buttons & PSP_CTRL_TRIANGLE && yPos2 > 0)
+            yPos2 -= speed;
 
-        else if (pad.Buttons & PSP_CTRL_RIGHT && xPos < SCREEN_WIDTH - 32)
-            xPos +=speed;
+        else if (pad.Buttons & PSP_CTRL_CROSS && yPos2 < SCREEN_HEIGHT - 48)
+            yPos2 += speed;
 
         startFrame();
 
-        drawRect(xPos, yPos, 32, 32); // Use xPos and yPos as the coordinates
+        drawRect(8, yPos, 8, 48); // Use xPos and yPos as the coordinates
+
+        drawRect(ballXPos, ballYPos, 16, 16); 
+
+        drawRect(SCREEN_WIDTH - 16, yPos2, 8, 48); 
 
         endFrame();
 
