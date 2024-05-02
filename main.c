@@ -15,8 +15,10 @@ char list[0x20000] __attribute__((aligned(64)));
 
 int xPos = 32; // Initial x position of the square
 int yPos = 32; // Initial y position of the square
+int speed = 5; 
 
-void initGu(){
+void initGu() {
+
     sceGuInit();
 
     //Set up buffers
@@ -79,20 +81,28 @@ void drawRect(float x, float y, float w, float h) {
 }
 
 int main() {
+
     initGu();
+
     SceCtrlData pad;
+
     int running = 1;
+
     while(running){
+
         sceCtrlReadBufferPositive(&pad, 1);
         
-        if (pad.Buttons & PSP_CTRL_UP)
-            yPos--;
-        if (pad.Buttons & PSP_CTRL_DOWN)
-            yPos++;
-        if (pad.Buttons & PSP_CTRL_LEFT)
-            xPos--;
-        if (pad.Buttons & PSP_CTRL_RIGHT)
-            xPos++;
+        if (pad.Buttons & PSP_CTRL_UP && yPos > 0)
+            yPos -= speed;
+
+        else if (pad.Buttons & PSP_CTRL_DOWN && yPos < SCREEN_HEIGHT - 32)
+            yPos += speed;
+
+        else if (pad.Buttons & PSP_CTRL_LEFT && xPos > 0)
+            xPos -= speed;
+
+        else if (pad.Buttons & PSP_CTRL_RIGHT && xPos < SCREEN_WIDTH - 32)
+            xPos +=speed;
 
         startFrame();
 
