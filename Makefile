@@ -11,7 +11,7 @@ PSP_FW_VERSION = 500
 PSP_LARGE_MEMORY = 1
 
 # PSP libraries
-LIBS = -lpspgu -lpspge -lpspdisplay
+LIBS = -lpspgu -lpspge -lpspdisplay -lpspctrl
 
 EXTRA_TARGETS = EBOOT.PBP
 PSP_EBOOT_TITLE = My First App
