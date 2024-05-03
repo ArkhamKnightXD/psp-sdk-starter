@@ -13,6 +13,26 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_VFPU | THREAD_ATTR_USER);
 
 char list[0x20000] __attribute__((aligned(64)));
 
+//These 3 functions are for setting up the exit button.
+int exit_callback(int arg1, int arg2, void *common) {
+    sceKernelExitGame();
+    return 0;
+}
+
+int callback_thread(SceSize args, void *argp) {
+    int cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
+    sceKernelRegisterExitCallback(cbid);
+    sceKernelSleepThreadCB();
+    return 0;
+}
+
+int setup_callbacks(void) {
+    int thid = sceKernelCreateThread("update_thread", callback_thread, 0x11, 0xFA0, 0, 0);
+    if(thid >= 0)
+        sceKernelStartThread(thid, 0, 0);
+    return thid;
+}
+
 void initGu()
 {
     sceGuInit();
@@ -96,6 +116,9 @@ _Bool hasCollision(Rectangle player, Rectangle ball)
 
 int main()
 {
+
+    setup_callbacks();
+
     initGu();
 
     Rectangle player1 = {8, SCREEN_HEIGHT / 2 - 48, 8, 48};
