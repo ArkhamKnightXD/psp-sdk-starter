@@ -156,5 +156,7 @@ int main()
         sceKernelDelayThread(10000); // Delay for smoother animation, adjust as needed
     }
 
+    endGu();
+
     return 0;
 }
