@@ -116,7 +116,6 @@ _Bool hasCollision(Rectangle player, Rectangle ball)
 
 int main()
 {
-
     setup_callbacks();
 
     initGu();
