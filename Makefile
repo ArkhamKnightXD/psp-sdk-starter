@@ -1,11 +1,11 @@
 TARGET = TUTORIAL
-OBJS = main.o
+OBJS = main.o exit_callback.o psp_graphics.o  # Add exit_callback.o here
 
 CFLAGS = 
-CXXFLAGS = $(CFLAGS) -std=c++14 -fno-rti
+CXXFLAGS = $(CFLAGS) -std=c++14 -fno-rtti
 ASFLAGS = $(CFLAGS)
 
-#PSP STUFFS
+# PSP STUFFS
 BUILD_PRX = 1
 PSP_FW_VERSION = 500
 PSP_LARGE_MEMORY = 1
