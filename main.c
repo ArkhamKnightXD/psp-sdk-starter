@@ -2,13 +2,14 @@
 #include <pspgu.h>
 #include <pspdisplay.h>
 #include <pspctrl.h>
+#include "exit_callback.h" // Include the header file where setup_callback is declared
 
 //This 2 lines are necessary to setup psp module info.
 PSP_MODULE_INFO("gutest", 0, 1, 0);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_VFPU | THREAD_ATTR_USER);
 
 //The buffer is 512, because the buffer size needs to be the closest power of 2 to the psp resolution,
-// and because has to be bigger than 480, is 512 instead of 256
+// and because has to be bigger than 480, is 512 instead of 256  
 #define BUFFER_WIDTH 512
 #define SCREEN_WIDTH 480
 #define SCREEN_HEIGHT 272
@@ -63,29 +64,6 @@ void endFrame()
     sceGuSwapBuffers();
 }
 
-//end of setup graphics.
-
-//These 3 functions are for setting up the exit button.
-int exit_callback(int arg1, int arg2, void *common) {
-    sceKernelExitGame();
-    return 0;
-}
-
-int callback_thread(SceSize args, void *argp) {
-    int cbid = sceKernelCreateCallback("Exit Callback", exit_callback, NULL);
-    sceKernelRegisterExitCallback(cbid);
-    sceKernelSleepThreadCB();
-    return 0;
-}
-
-int setup_callbacks(void) {
-    int thid = sceKernelCreateThread("update_thread", callback_thread, 0x11, 0xFA0, 0, 0);
-    if(thid >= 0)
-        sceKernelStartThread(thid, 0, 0);
-    return thid;
-}
-//end exit button callbacks.
-
 typedef struct
 {
     unsigned short u, v;
@@ -115,7 +93,6 @@ typedef struct
 
 _Bool hasCollision(Rectangle player, Rectangle ball)
 {
-
     return player.x < ball.x + ball.w && player.x + player.w > ball.x &&
            player.y < ball.y + ball.h && player.y + player.h > ball.y;
 }
@@ -183,6 +160,5 @@ int main()
     }
 
     endGu();
-
     return 0;
 }
