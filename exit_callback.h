@@ -3,6 +3,10 @@
 
 #include <pspkernel.h>
 
+// With this setup, you can include this header file in your main file, and the functions will be defined inline.
+//However, remember that this approach may increase the size of your compiled code, as the functions will be duplicated wherever they are used. 
+// Use this method judiciously, especially in embedded systems with limited memory.
+
 //These 3 functions are for setting up the exit button.
 static inline int exit_callback(int arg1, int arg2, void *common) {
     sceKernelExitGame();
