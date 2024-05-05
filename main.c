@@ -11,6 +11,8 @@ PSP_MAIN_THREAD_ATTR(THREAD_ATTR_VFPU | THREAD_ATTR_USER);
 
 char list[0x20000] __attribute__((aligned(64)));
 
+//(startFrame-endFrame) Together, these functions provide the necessary setup and synchronization for rendering frames on the PSP using the PSP graphics library (libgu).
+// They are typically called at the beginning and end of each frame rendering cycle in a game or graphics application.
 void startFrame()
 {
     sceGuStart(GU_DIRECT, list);
