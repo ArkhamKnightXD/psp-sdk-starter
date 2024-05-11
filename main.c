@@ -3,7 +3,7 @@
 #include "psp_graphics.h" 
  
 //This 2 lines are necessary to setup psp module info. 
-PSP_MODULE_INFO("gutest", 0, 1, 0);
+PSP_MODULE_INFO("pong", 0, 1, 0);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_VFPU | THREAD_ATTR_USER);  
 
 typedef struct
@@ -27,7 +27,7 @@ int main()
     Rectangle player1 = {8, SCREEN_HEIGHT / 2 - 48, 8, 48};
     Rectangle player2 = {SCREEN_WIDTH - 16, SCREEN_HEIGHT / 2 - 48, 8, 48};
 
-    Rectangle ball = {SCREEN_WIDTH / 2 - 16, SCREEN_HEIGHT / 2 - 16, 16, 16};
+    Rectangle ball = {SCREEN_WIDTH / 2 - 16, SCREEN_HEIGHT / 2 - 16, 12, 12};
 
     int playerSpeed = 6;
 
@@ -43,22 +43,23 @@ int main()
         if (pad.Buttons & PSP_CTRL_UP && player1.y > 0)
             player1.y -= playerSpeed;
 
-        else if (pad.Buttons & PSP_CTRL_DOWN && player1.y < SCREEN_HEIGHT - 48)
+        else if (pad.Buttons & PSP_CTRL_DOWN && player1.y < SCREEN_HEIGHT - player1.h)
             player1.y += playerSpeed;
 
         if (pad.Buttons & PSP_CTRL_TRIANGLE && player2.y > 0)
             player2.y -= playerSpeed;
 
-        else if (pad.Buttons & PSP_CTRL_CROSS && player2.y < SCREEN_HEIGHT - 48)
+        else if (pad.Buttons & PSP_CTRL_CROSS && player2.y < SCREEN_HEIGHT - player2.h)
             player2.y += playerSpeed;
 
-        if (ball.y < 0 || ball.y > SCREEN_HEIGHT - 16)
+        if (ball.y < 0 || ball.y > SCREEN_HEIGHT - ball.h)
             ballVelocityY *= -1;
         
-        if (ball.x > SCREEN_WIDTH + 16 || ball.x < -16)
+        if (ball.x > SCREEN_WIDTH + 16 || ball.x < - ball.w)
         {
-            ball.x = SCREEN_WIDTH / 2 - 16;
-            ball.y = SCREEN_HEIGHT / 2 - 16;
+            ball.x = SCREEN_WIDTH / 2 - ball.w;
+            ball.y = SCREEN_HEIGHT / 2 - ball.h;
+            ballVelocityX *= -1;
         }
 
         if (hasCollision(player1, ball) || hasCollision(player2, ball))
@@ -74,7 +75,7 @@ int main()
         drawRect(ball.x, ball.y, ball.w, ball.h);
 
         drawRect(player2.x, player2.y, player2.w, player2.h);
-
+ 
         endFrame();
 
         sceKernelDelayThread(10000); // Delay for smoother animation, adjust as needed
