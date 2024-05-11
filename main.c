@@ -1,53 +1,10 @@
-#include <pspkernel.h>
-#include <pspgu.h>
-#include <pspdisplay.h>
 #include <pspctrl.h>
 #include "exit_callback.h" // Include the header file where setup_callback is declared
-#include "psp_graphics.h"
-
-//This 2 lines are necessary to setup psp module info.
+#include "psp_graphics.h" 
+ 
+//This 2 lines are necessary to setup psp module info. 
 PSP_MODULE_INFO("gutest", 0, 1, 0);
 PSP_MAIN_THREAD_ATTR(THREAD_ATTR_VFPU | THREAD_ATTR_USER);
-
-char list[0x20000] __attribute__((aligned(64)));
-
-//(startFrame-endFrame) Together, these functions provide the necessary setup and synchronization for rendering frames on the PSP using the PSP graphics library (libgu).
-// They are typically called at the beginning and end of each frame rendering cycle in a game or graphics application. 
-void startFrame()
-{
-    sceGuStart(GU_DIRECT, list);
-    sceGuClearColor(0x00000000); // Black background
-    sceGuClear(GU_COLOR_BUFFER_BIT);
-}
-
-void endFrame()
-{
-    sceGuFinish();
-    sceGuSync(0, 0);
-    sceDisplayWaitVblankStart();
-    sceGuSwapBuffers();
-}
-
-typedef struct
-{
-    unsigned short u, v;
-    short x, y, z;
-} Vertex;
-
-void drawRect(float x, float y, float w, float h)
-{
-
-    Vertex *vertices = (Vertex *)sceGuGetMemory(2 * sizeof(Vertex));
-
-    vertices[0].x = x;
-    vertices[0].y = y;
-
-    vertices[1].x = x + w; // Adjusted x coordinate to include width
-    vertices[1].y = y + h; // Adjusted y coordinate to include height
-
-    sceGuColor(0xFFFFFFFF); // White, colors are ABGR
-    sceGuDrawArray(GU_SPRITES, GU_TEXTURE_16BIT | GU_VERTEX_16BIT | GU_TRANSFORM_2D, 2, 0, vertices);
-}
 
 typedef struct
 {
@@ -65,7 +22,7 @@ int main()
 {
     setup_callbacks();
 
-    initGu(list);
+    initGu();
 
     Rectangle player1 = {8, SCREEN_HEIGHT / 2 - 48, 8, 48};
     Rectangle player2 = {SCREEN_WIDTH - 16, SCREEN_HEIGHT / 2 - 48, 8, 48};
